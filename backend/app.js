@@ -8,7 +8,7 @@ require("./model/User")
 app.use(cors())
 app.use(express.json())
 app.use("/api/users", userRoute)
-db.sync({force:true}).then(()=>console.log("db ok")).catch(()=>console.log("error db"))
+db.sync({alter:true}).then(()=>console.log("db ok")).catch(()=>console.log("error db"))
 app.listen(port, () => {
 
 console.log("server is running on port :- ", port)

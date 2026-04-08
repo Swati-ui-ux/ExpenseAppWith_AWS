@@ -1,10 +1,12 @@
 import React from 'react'
-import UserForm from './components/UserForm'
+import SignUp from './components/SignUp'
 import {ToastContainer} from "react-toastify"
+import Login from './components/Login'
 const App = () => {
   return (
     <div>
-      <UserForm />
+      <SignUp />
+      <Login/>
       <ToastContainer/>
     </div>
   )

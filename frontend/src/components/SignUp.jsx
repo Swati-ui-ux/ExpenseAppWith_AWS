@@ -6,7 +6,7 @@ const UserForm = () => {
     const handleSubmit = async(e) => {
         e.preventDefault()
         try {
-            const { data } = await axios.post("http://localhost:3000/api/users", formData)
+            const { data } = await axios.post("http://localhost:3000/api/users/signup", formData)
             toast.success("User added successfully")
             setFormData({ name: "", email: "", password: "" })
             console.log(data.data)

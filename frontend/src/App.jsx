@@ -4,6 +4,7 @@ import {ToastContainer} from "react-toastify"
 import Login from './components/Login'
 import { Route, Routes } from 'react-router-dom'
 import Home from './components/Home'
+import { Navigate } from 'react-router-dom'
 const App = () => {
   const [isLogin, setIsLogin] = useState(null)
  console.log(isLogin)
@@ -14,17 +15,19 @@ const App = () => {
     <div>
 
       <Routes>
-        {isLogin &&
-          <Route
-            path='/'
-          element={
-            isLogin?
-            <Home />:<Login/>} />}
+  <Route
+    path="/"
+    element={isLogin ? <Home /> : <Navigate to="/" />}
+  />
 
+  <Route
+    path="/login"
+    element={!isLogin ? <Login /> : <Navigate to="/" />}
+  />
 
-          <Route path='/login' element={ <Login />} />
-      <Route path='/signup' element={<SignUp/>}/>
+  <Route path="/signup" element={<SignUp />} />
       </Routes>
+      
   
       <ToastContainer/>
     </div>

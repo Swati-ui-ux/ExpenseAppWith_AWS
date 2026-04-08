@@ -10,12 +10,13 @@ const navigate = useNavigate()
     e.preventDefault()
     try {
       const { data } = await axios.post("http://localhost:3000/api/users/login", formData)
-      
+      console.log(data)
       localStorage.setItem("token", data.token)
+      console.log("Token",data.token)
       toast.success("Login successfully")
 navigate("/")
       setFormData({ email: "", password: "" })
-      console.log(data)
+      // console.log(data)
 
     } catch (error) {
       const msg = error.response?.data?.message || "Login failed"

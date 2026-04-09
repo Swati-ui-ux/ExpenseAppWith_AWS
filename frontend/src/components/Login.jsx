@@ -3,7 +3,7 @@ import axios from "axios"
 import { toast } from 'react-toastify'
 import { Link, useNavigate } from 'react-router-dom'
 
-const Login = () => {
+const Login = ({ onLogin}) => {
   const [formData, setFormData] = useState({ email: "", password: "" })
 const navigate = useNavigate()
   const handleSubmit = async (e) => {
@@ -12,9 +12,11 @@ const navigate = useNavigate()
       const { data } = await axios.post("http://localhost:3000/api/users/login", formData)
       console.log(data)
       localStorage.setItem("token", data.token)
-      console.log("Token",data.token)
+      console.log("Token", data.token)
+       onLogin() 
+      navigate("/")
+      
       toast.success("Login successfully")
-navigate("/")
       setFormData({ email: "", password: "" })
       // console.log(data)
 

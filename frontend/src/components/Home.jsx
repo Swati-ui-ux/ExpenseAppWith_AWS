@@ -1,13 +1,38 @@
 import axios from 'axios'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import ShowData from './ShowData'
 
-const Home = () => {
+const Home = ({onLoggedOut}) => {
     const [formData, setFormData] = useState({
         money: "",
         description: "",
         category:""
     })
+    const [dbData, setDbData] = useState([])
+   const getData = async () => {
+    try {
+        const token = localStorage.getItem("token");
+
+        const { data } = await axios.get(
+            "http://localhost:3000/api/expense",
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
+        );
+
+        console.log(data.expense);
+        setDbData(data.expense);
+
+    } catch (error) {
+        console.log(error.response?.data || error.message);
+    }
+    }
+    useEffect(() => {
+    getData()
+    },[])
     const navigate = useNavigate()
     let handleSubmit = async (e) => {
         
@@ -20,6 +45,7 @@ const Home = () => {
                 Authorization:`Bearer ${token}`
                 }
             })
+            alert("expense added ✅")
             console.log(data.data)
         } catch (error) {
              const msg = error.response?.data?.message || "Login failed"
@@ -28,6 +54,7 @@ const Home = () => {
     }
     let handleClick = () => {
         localStorage.removeItem("token")
+        onLoggedOut()
         navigate("/login")
     }
     let handleChange = (e) => {
@@ -36,17 +63,30 @@ const Home = () => {
             [e.target.name] :e.target.value
         }))
     }
-  return (
-      <div>Home
-      <button onClick={handleClick} className='bg-gray-500 py-2 px-4 rounded-md text-white'>Log out</button>
-          <form onSubmit={handleSubmit}>
-              <h1>Add expenses</h1>
+    return (
+        <div>
+                  <div className="bg-white shadow-lg rounded-2xl p-8 w-full max-w-md">
+        <div className="flex justify-between items-center mb-6">
+                    <h1 className="text-2xl font-bold text-gray-800">
+                        Add Expense
+                    </h1>
+
+                    <button
+                        onClick={handleClick}
+                        className="bg-red-500 hover:bg-red-600 text-white px-4 py-1 rounded-lg text-sm"
+                    >
+                        Logout
+                    </button>
+                </div>
+          
+          <form onSubmit={handleSubmit} className="space-y-4">
               <input 
                   type="number"
                   name="money" 
                   placeholder='Enter money'
                   onChange={handleChange}
                   value={formData.money}
+                   className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
               />
               
               <input 
@@ -55,20 +95,29 @@ const Home = () => {
                   placeholder='Description'
                   onChange={handleChange}
                   value={formData.description}
+                   className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
               />
               
               
               <select
                   onChange={handleChange}
-                  value={formData.value} name='category'>
+                  value={formData.category} name='category'
+               className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              >
+                  <option value="">Select Category</option>
                   <option value="food">Food</option>
               <option value="petrol">Petrol</option>
               <option value="salary">Salary</option>
               </select>
-              <button type='submit'>submit</button>
-          </form>
+              <button
+                  type='submit'
+                   className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg font-semibold"
+              >submit</button>
+            </form>
+</div>
+            <ShowData dbData={dbData}/>
+</div>
           
-      </div>
   )
 }
 

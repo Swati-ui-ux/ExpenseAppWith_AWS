@@ -1,7 +1,7 @@
-import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import ShowData from './ShowData'
+import { getExpense, postExpense } from '../services/userService'
 
 const Home = ({onLoggedOut}) => {
     const [formData, setFormData] = useState({
@@ -10,20 +10,11 @@ const Home = ({onLoggedOut}) => {
         category:""
     })
     const [dbData, setDbData] = useState([])
+    
    const getData = async () => {
     try {
-        const token = localStorage.getItem("token");
-
-        const { data } = await axios.get(
-            "http://localhost:3000/api/expense",
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            }
-        );
-
-        console.log(data.expense);
+        const { data } = await getExpense();
+        console.log(data)
         setDbData(data.expense);
 
     } catch (error) {
@@ -39,13 +30,14 @@ const Home = ({onLoggedOut}) => {
         e.preventDefault()
         
         try {
-            const token= localStorage.getItem("token")
-            const { data } = await axios.post("http://localhost:3000/api/expense", formData, {
-                headers: {
-                Authorization:`Bearer ${token}`
-                }
-            })
+            const { data } = await postExpense(formData)
             alert("expense added ✅")
+            getData()
+            setFormData({
+        money: "",
+        description: "",
+        category:""
+    })
             console.log(data.data)
         } catch (error) {
              const msg = error.response?.data?.message || "Login failed"
@@ -64,8 +56,10 @@ const Home = ({onLoggedOut}) => {
         }))
     }
     return (
-        <div>
-                  <div className="bg-white shadow-lg rounded-2xl p-8 w-full max-w-md">
+        <div className='m-2'>
+            <h1 className='text-2xl font-bold text-center border-b-2
+'>Expense App</h1>
+                  <div className="bg-white shadow-lg rounded-2xl p-8 m-auto w-full max-w-md">
         <div className="flex justify-between items-center mb-6">
                     <h1 className="text-2xl font-bold text-gray-800">
                         Add Expense
@@ -82,7 +76,8 @@ const Home = ({onLoggedOut}) => {
           <form onSubmit={handleSubmit} className="space-y-4">
               <input 
                   type="number"
-                  name="money" 
+                        name="money" 
+                        required
                   placeholder='Enter money'
                   onChange={handleChange}
                   value={formData.money}
@@ -90,7 +85,9 @@ const Home = ({onLoggedOut}) => {
               />
               
               <input 
-                  type="text"
+                        type="text"
+                        required
+                        
                   name="description" 
                   placeholder='Description'
                   onChange={handleChange}
@@ -102,7 +99,9 @@ const Home = ({onLoggedOut}) => {
               <select
                   onChange={handleChange}
                   value={formData.category} name='category'
-               className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        required
+                        
               >
                   <option value="">Select Category</option>
                   <option value="food">Food</option>

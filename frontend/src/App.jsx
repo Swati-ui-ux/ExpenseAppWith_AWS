@@ -5,9 +5,10 @@ import Login from './components/Login'
 import { Route, Routes } from 'react-router-dom'
 import Home from './components/Home'
 import { Navigate } from 'react-router-dom'
+import ForgotPassword from './components/ForgotPassword'
+import ResetPassword from './components/ResetPassword'
 const App = () => {
   const [isLogin, setIsLogin] = useState(null)
- console.log("Is login",isLogin)
   useEffect(() => {
     const token = localStorage.getItem("token")
     setIsLogin(!!token);
@@ -35,7 +36,10 @@ const App = () => {
   element={!isLogin ? <Login onLogin={handleLogin} /> : <Navigate to="/" />}
 />
 
-  <Route path="/signup" element={<SignUp />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/forgot" element={<ForgotPassword />} />
+          <Route path="/reset/:token" element={<ResetPassword />} />
+        
       </Routes>
       
   

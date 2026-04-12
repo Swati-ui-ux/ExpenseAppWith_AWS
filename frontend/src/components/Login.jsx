@@ -5,6 +5,7 @@ import { Link, useNavigate } from 'react-router-dom'
 
 const Login = ({ onLogin}) => {
   const [formData, setFormData] = useState({ email: "", password: "" })
+  const [showPassword,setShowPassword] = useState(false)
 const navigate = useNavigate()
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -34,6 +35,9 @@ const navigate = useNavigate()
     }))
   }
 
+  let handleShowPassword = () => {
+  setShowPassword((pre)=>!pre)
+  }
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <form 
@@ -53,20 +57,22 @@ const navigate = useNavigate()
           onChange={handleChange}
           className="w-full mb-4 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
         />
-
+        <div  className="w-full mb-4 p-3 border rounded-lg focus:outline-none focus:ring-2 flex justify-between focus:ring-green-400" >
         <input
-          type="password"
+          type={showPassword?"text":"password"}
           placeholder="Enter Password"
           name="password"
           required
           value={formData.password}
           onChange={handleChange}
-          className="w-full mb-6 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
+          className='outline-none'
         />
-
+        <span onClick={handleShowPassword} className='cursor-pointer'>{showPassword?"🙈":"👁️"}</span>
+        </div>
+        <div>Forgot password <Link to='/forgot'>Click</Link></div>
         <button
           type="submit"
-          className="w-full bg-green-500 text-white py-3 rounded-lg hover:bg-green-600 transition duration-300"
+          className="w-full bg-green-500 mt-2 text-white py-3 rounded-lg hover:bg-green-600 transition duration-300"
         >
           Login
               </button>

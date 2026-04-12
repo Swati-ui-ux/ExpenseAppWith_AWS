@@ -2,22 +2,41 @@
 const { User } = require("../model")
 const Expenses = require("../model/Expense")
 
-const addExpenses = async(req,res) => {
-    try {
-        const { money, category, description } = req.body
-        // const UserId = await User.findByPk(req.user.id)
-        // console.log("UserId 💌--💌",UserId)
-        console.log("Body", req.body)
-        const expense = await Expenses.create({ money, category, description,UserId:req.user.id})
-        if (!expense) return res.status(404).json({ message: "expense not added" })
-        res.status(201).json({ message: "expense added successfully",expense })
-        
-    } catch (error) {
-        console.log(error)
-    res.status(500).json({message:"server error"})
-}
-}
+const addExpenses = async (req, res) => {
+  try {
+    // const 
+    console.log("Body",req.body)
+    if (!req.body) {
+      return res.status(400).json({ message: "Request body missing" })
+    }
 
+    const { money, category, description } = req.body
+
+    if (!money || !category || !description) {
+      return res.status(400).json({ message: "All fields are required" })
+    }
+
+    console.log("Body", req.body)
+
+    const expense = await Expenses.create({
+      money,
+      category,
+      description,
+      UserId: req.user.id
+    })
+    if (!expense) {
+    return res.status(404).json({message:"expense not aded"})
+    }
+    return res.status(201).json({
+      message: "expense added successfully",
+      expense
+    })
+
+  } catch (error) {
+    console.log(error)
+    return res.status(500).json({ message: "server error" }) // ✅ return add karo
+  }
+}
 const getExpenses = async (req, res) => {
     try {
         

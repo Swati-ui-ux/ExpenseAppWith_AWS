@@ -13,6 +13,7 @@ const expenses = require("./model/Expense")
 const user = require("./model/User")
 app.use(cors())
 app.use(express.json())
+
 app.use("/api/users", userRoute)
 app.use("/api/expense",authemiddleware,expenseRoute)
 db.sync({alter:true}).then(()=>console.log("db ok")).catch(()=>console.log("error db"))

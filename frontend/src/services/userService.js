@@ -7,3 +7,7 @@ export const getExpense = () => {
 export const postExpense = (expenseData) => {
 return api.post("/expense",expenseData)
 }
+
+export const genratText = (data) => {
+return api.post("/genret",data)
+}

@@ -2,8 +2,8 @@ const User = require("../model/User")
 const jwt = require("jsonwebtoken")
 const bcrypt = require("bcrypt")
 const crypto = require("crypto")
-const dotenv = require("dotenv")
-dotenv.config()
+ require("dotenv").config()
+const {GoogleGenAI} = require("@google/genai")
 const sendEmail = require("../utils/sendEmail")
 const postUser = async (req,res) => {
 try {
@@ -88,9 +88,6 @@ const forgotPassword = async (req, res) => {
   }
 };
 
-
-
-
 const resetPassword = async (req, res) => {
   try {
     const { token } = req.params;
@@ -125,4 +122,57 @@ const resetPassword = async (req, res) => {
 };
 
 
-module.exports = {postUser,loginUser,forgotPassword,resetPassword}
+
+
+const genratText = async (req, res) => {
+  try {
+    const { text } = req.body;
+
+    if (!text) {
+      return res.status(400).json({
+        message: "Text is required",
+      });
+    }
+
+    if (!process.env.GEN_API_KEY) {
+      return res.status(500).json({
+        message: "API key missing",
+      });
+    }
+
+   
+    const ai = new GoogleGenAI({
+      apiKey: process.env.GEN_API_KEY,
+    });
+
+ 
+    const response = await ai.models.generateContent({
+      model: "gemini-1.5-flash",   
+      contents: text,
+    });
+
+    
+    const data = response.text();
+
+    console.log("AI Response:", data);
+
+    return res.status(200).json({
+      message: "success",
+      data,
+    });
+
+  } catch (error) {
+    console.log("AI Error:", error);
+    console.log("Message:", error.message);
+
+    return res.status(500).json({
+      message: error.message || "Something went wrong",
+    });
+  }
+};
+
+
+
+// export default genratText;
+
+module.exports = {postUser,loginUser,forgotPassword,resetPassword,genratText}

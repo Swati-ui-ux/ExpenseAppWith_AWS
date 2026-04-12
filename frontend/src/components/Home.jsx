@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import ShowData from './ShowData'
+import Ai from './Ai'
 import { getExpense, postExpense } from '../services/userService'
 
 const Home = ({onLoggedOut}) => {
@@ -112,8 +113,9 @@ const Home = ({onLoggedOut}) => {
                   type='submit'
                    className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg font-semibold"
               >submit</button>
-            </form>
+                </form>
 </div>
+                <Ai/>
             <ShowData dbData={dbData}/>
 </div>
           
